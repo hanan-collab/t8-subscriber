@@ -38,3 +38,13 @@ Ketika saya menjalankan cargo run berulang kali (saya melakukan 5x) di direktori
 Namun subscriber menunda 1 detik menggunakan thread::sleep untuk setiap pesan yang diproses.
 
 Karena publisher mengirimkan pesan lebih cepat daripada subscriber dapat memprosesnya dengan penundaan tambahan, pesan mulai menumpuk di antrian. Hal ini tercermin dari peningkatan panjang antrian yang ditampilkan di Antarmuka Manajemen RabbitMQ. Jumlah total pesan dalam antrian (~15 dalam kasus Saya) tergantung pada faktor-faktor jumlah eksekusi publisher.
+
+## Reflection and Running at least three subscribers
+![terminal 3 subscriber dan 1 publisher](image-1.png)
+![monitoring RabbitMQ](image-2.png)
+
+Saya mengeksekusi dengan jumlah yang sama dengan sebelumnya (5 kali) namun kini dengan3 subscriber berjalan.
+
+Dapat dilihat lonjakan pesan dalam antrian akan berkurang lebih cepat dibandingkan dengan menjalankan hanya satu subscriber seperti sebelumnya (antrian yang awalnya ~15 sekarang ~7.5).
+
+Dengan ini memungkinkan pemrosesan pesan secara paralel, mengurangi penumpukan pesan dalam antrian, dan meningkatkan keseluruhan throughput sistem.
