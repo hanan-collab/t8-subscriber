@@ -28,3 +28,13 @@ AMQP memastikan pesan terkirim dengan aman sehingga meminimalkan risiko kehilang
 1. `guest` pertama adalah nama pengguna yang digunakan untuk autentikasi saat menghubungkan ke server AMQP.
 2. `guest` kedua adalah kata sandi yang digunakan untuk autentikasi bersama dengan nama pengguna `guest` pertama.
 `localhost:5672` adalah alamat (`localhost` mengacu ke mesin lokal tempat program subscriber dijalankan) dan port server AMQP (`5672` adalah port default yang digunakan oleh RabbitMQ untuk koneksi AMQP).
+
+## Simulation slow subscriber
+![Slow Subscriber](image.png)
+kode `thread::sleep(std::time::Duration::from_millis(10)); pada kode subscriber)` menunjukkan peningkatan panjang antrian. Fenomena ini terjadi karena publisher mengirimkan pesan ke antrian lebih cepat daripada subscriber dapat memprosesnya.
+
+Ketika saya menjalankan cargo run berulang kali (saya melakukan 5x) di direktori publisher, program ini mengirimkan beberapa event "user_created" ke antrian RabbitMQ bernama "user_created" secara cepat.
+
+Namun subscriber menunda 1 detik menggunakan thread::sleep untuk setiap pesan yang diproses.
+
+Karena publisher mengirimkan pesan lebih cepat daripada subscriber dapat memprosesnya dengan penundaan tambahan, pesan mulai menumpuk di antrian. Hal ini tercermin dari peningkatan panjang antrian yang ditampilkan di Antarmuka Manajemen RabbitMQ. Jumlah total pesan dalam antrian (~15 dalam kasus Saya) tergantung pada faktor-faktor jumlah eksekusi publisher.
